@@ -88,11 +88,15 @@ app.post('/api/locations', (req, res) => {
   });
 });
 
+// Socket.IO connection handler
 io.on('connection', socket => {
-  console.log('client connectet', socket.id)
+  console.log('client connected', socket.id)
 
+  // send location data collected so far
+  // to the newly connected client
   socket.emit('initialLocations', locations)
 
+  // handle disconnection
   socket.on('disconnect', () => console.log('disconnected'))
 })
 
