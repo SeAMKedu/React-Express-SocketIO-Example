@@ -3,10 +3,12 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
-
+// Create Express app
 const app = express();
+// Create HTTP server
 const server = createServer(app);
 
+// Initialize Socket.IO server
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173",
@@ -22,7 +24,7 @@ app.use(cors());
 // Parse JSON bodies
 app.use(json());
 
-// Sample location data
+// Initiallocation data
 const locations = [
   {
     id: 1,
@@ -33,22 +35,7 @@ const locations = [
     id: 2,
     latitude: 62.7904,
     longitude: 22.8405
-  },
-  {
-    id: 3,
-    latitude: 62.7905,
-    longitude: 22.8404
-  },
-  {
-    id: 4,
-    latitude: 62.7906,
-    longitude: 22.8403
-  },
-  {
-    id: 5,
-    latitude: 62.7907,
-    longitude: 22.8402
-  },
+  }
 ];
 
 // Routes
