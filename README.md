@@ -15,7 +15,7 @@ Sovelluksessa käytetään Socket.IO-pakettia palvelimen ja asiakkaan väliseen 
 
 [Leaflet](https://leafletjs.com/) on avoimen lähdekoodin JavaScript-kirjasto, jonka avulla voi rakentaa web-pohjaisia karttasovelluksia. Leafletin avulla voidaan näyttää GeoJSON-muotoista paikkatietoa kartalla. Periaatteessa karttatiedon näyttämiseen riittää kuitenkin vain tieto pisteen pituus- ja laveyspiiristä. Leafletia voidaan käyttää yhdessä esimerkiksi ilmaisen [OpenStreetMap](https://www.openstreetmap.org/)-karttarajapinnan kanssa.
 
-<img src="images/leafletexample.png" alt="Leaflet" style="width:50%;" />
+<img src="images/leafletexample.png" alt="Leaflet" style="width:40%;" />
 
 Tässä harjoituksessa käytetään [React Leaflet](https://react-leaflet.js.org/)-pakettia, joka mahdollistaa nimensä mukaisesti Leafletin käyttämisen React-sovelluksessa.
 
@@ -28,7 +28,40 @@ Leafletin ja OpenStreetMapin sijaan karttasoveluksen voi tehdä esimerkiksi Goog
 Socket.io:ssa on oma kirjasto sekä asiakkaalle että palvelimelle. APIt ovat lähes samanlaiset.
 Socket.io käyttää Web Socketteja. Socket.io tuo Web Sockettiin lisää toiminnallisuutta, kuten broadcastingin useille asiakkaille ja asynkronisen I/O:n. Socket.io:n avulla saadaan tehtyä web-sovellus, jossa sivu päivittyy automaattisesti aina, kun palvelimelle tulee uutta dataa esimerkiksi HTTP POST -metodin välityksellä.
 
+# Esimerkkisovelluksen tekeminen
+
+Tässä ohjeessa kaikki kolme sovelluksen osaa (backend, frontend ja simulaattori) tehdään omiin hakemistoihinsa. Sovellukset käynnistetään myös erikseen.
+
+Tee alla oleva hakemistorakenne:
+
+React-Express-SocketIO-Example/
+├── backend/
+├── frontend/
+├── simulator/
+
 ## Backend (Experss.js-palvelinsovellus)
+
+Alusta backend samalla tavalla kuin Full Stack open -kurssin luvun [3a](https://fullstackopen.com/osa3/node_js_ja_express) on neuvottu:
+
+1. Mene hakemistoon React-Express-SocketIO-Example/backend ja avaa command prompt.
+2. Anna komento npm init. Voit jättää kaikki kysytyt kohdat tyhjiksi.
+
+Tuloksena syntyy tiedosto package.json backend-hakemiston juureen.
+
+3. Avaa package.json ja lisää sinne seuraavat seuraavat kaksi riviä.
+
+```javascript:highlight={4,5}
+{
+  // ...
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  // ...
+}
+
+```
 
 ## Frontend (selaimessa ajettavassa React-sovellus)
 
