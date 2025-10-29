@@ -34,10 +34,10 @@ Tässä ohjeessa kaikki kolme sovelluksen osaa (backend, frontend ja simulaattor
 
 Tee alla oleva hakemistorakenne:
 
-React-Express-SocketIO-Example/
-├── backend/
-├── frontend/
-├── simulator/
+React-Express-SocketIO-Example
+├── backend
+├── frontend
+├── simulator
 
 ## Backend (Experss.js-palvelinsovellus)
 
