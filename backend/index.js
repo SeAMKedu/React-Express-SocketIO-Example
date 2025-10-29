@@ -10,6 +10,7 @@ const server = createServer(app);
 
 // Initialize Socket.IO server
 const io = new Server(server, {
+  // enable CORS for Socket.IO connections
   cors: {
     origin: "http://localhost:5173",
     methods: ["GET", "POST"]
@@ -18,13 +19,13 @@ const io = new Server(server, {
 
 const PORT = process.env.PORT || 3001;
 
-// Enable CORS for all routes
+// Enable CORS for all routes (HTTP connections)
 app.use(cors());
 
 // Parse JSON bodies
 app.use(json());
 
-// Initiallocation data
+// Initial location data
 const locations = [
   {
     id: 1,

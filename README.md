@@ -50,11 +50,12 @@ Alusta backend samalla tavalla kuin Full Stack open -kurssin luvun [3a](https://
 
 Tuloksena syntyy tiedosto package.json backend-hakemiston juureen.
 
-3. Avaa package.json ja lisää scripts-osion alle kaksi riviä "start" ja "dev" alla olevan mallin mukaan.
+3. Avaa package.json. Lisää rivi ```"type": "module",``` päätasolle sekä scripts-osion alle kaksi riviä "start" ja "dev" alla olevan mallin mukaan.
    
 ```
 {
   // ...
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
@@ -72,9 +73,135 @@ npm install cors
 npm install socket.io
 ```  
 
-### Sovelluksen runko
+### Backendin alustukset ja käynnistys
 
+Tee backend-hakemistoon uusi tiedosto index.js. Lisää tiedoston alkuun tarvittavat importit: 
+```javascript
+import express, { json } from 'express';
+import cors from 'cors';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+```
 
+Lisää sitten sovelluksessa tarvittavat alustustoimenpiteet:
+```javascript
+// Create Express app
+const app = express();
+// Create HTTP server
+const server = createServer(app);
+
+// Initialize Socket.IO server
+const io = new Server(server, {
+  // enable CORS for Socket.IO connections
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"]
+  }
+});
+
+const PORT = process.env.PORT || 3001;
+
+// Enable CORS for all routes (HTTP connections)
+app.use(cors());
+
+// Parse JSON bodies
+app.use(json());
+```
+
+Ensimmäisellä rivillä
+```javascript
+const app = express();
+```
+luodaan Express-sovelluksen instanssi. Syntyvän app-nimisen kautta päästään käsittelemään palvelimelle saapuvat HTTP-pyynnöt (esimerkiksi GET ja POST).
+
+Seuraava rivi
+```javascript
+const server = createServer(app);
+```
+käärii Express-sovelluksen Node.js:n natiivin HTTP-palvelimen sisään. Syntyvän server-olion kautta päästään käsiksi HTTP-palvelimen raakaversioon, jota taas tarvitaan Socket.IO:ta varten.
+
+Seuraavaksi alustetaan Socket.IO-palvelin:
+```javascript
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"]
+  }
+});
+```
+Parametrina annetaan muuttuja server sekä CORS-asetukset WebSocket-yhteyksiä varten.
+
+Rivi
+```javascript
+app.use(cors());
+```
+ottaa käyttöön middlewaren, joka lisää CORS-otsikot kaikille Express-reiteille. Nyt frontend voi tehdä HTTP-pyyntöjä backendille.
+
+Lopuksi otetaan käyttöön vielä middleware, joka jäsentää POST-pyyntöjen mukana saapuvan JSON-muotoisen datan olioiksi.
+```javascript
+app.use(json());
+```
+
+Lisätään vielä tiedoston loppuun HTTP-palvelimen käynnistys:
+```javascript
+// Start server
+server.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+export default app;
+```
+Huomaa, että tässä käytetään server-oliota app-olion (Express) sijaan. Tällä tavoin backend voi käsitellä sekä HTTP-pyynnöt että Socket.IO-yhteydet.
+
+### Datan tallennus
+
+Tässä sovelluksessa saapuva sijaintidata tallennetaan listaan. Listaan on laitettu malliksi kaksi pistettä.
+
+```javascript
+// Initial location data
+const locations = [
+  {
+    id: 1,
+    latitude: 62.7903,
+    longitude: 22.8406
+  },
+  {
+    id: 2,
+    latitude: 62.7904,
+    longitude: 22.8405
+  }
+];
+```
+
+### GET-pyynnön käsittely
+
+Lisätään sovellukseen Express-route, joka palauttaa kaikki locations-listaan tallennetut pisteet JSON-muodossa.
+```javascript
+// Get all locations
+app.get('/api/locations', (req, res) => {
+  res.json({
+    success: true,
+    data: locations,
+    count: locations.length
+  });
+});
+
+```
+Tämä route vastaa GET-pyyntöihin osoitteessa /api/locations. Tätä routea ei tarvita varsinaisessa sovelluksessa, sillä kommunikointi backendin ja frontendin välillä toteutetaan Socket.IO:n avulla. Routea voidaan käyttää kuitenkin sovelluksen testauksessa.
+
+Voit ajaa backend-sovelluksen nyt komennolla
+```
+npm run dev
+```
+
+Käynnistä sitten selain ja kirjoita osoitekenttään
+```
+localhost:3001/api/locations
+```
+
+Selain näyttää listassa locations olevat pisteet.
+
+<img src="images/apilocations.png" alt="" style="width:40%;" />
 
 ## Frontend (selaimessa ajettavassa React-sovellus)
 
