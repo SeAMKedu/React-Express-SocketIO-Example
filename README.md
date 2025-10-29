@@ -209,6 +209,12 @@ Selain näyttää listassa locations olevat pisteet.
 
 ### POST-pyynnön käsittely
 
+Paikannusta tekevä laitetta simuloiva ohjelma lähettää sijaintitietoa kerran sekunnissa HTTP POST -metodin avulla. Backendissä tarvitaan route, joka käsittelee vastaanotetun datan. Datan jäsentäminen JSON-muodosta olioksi tapahtuu automaattisesti json-middlewaren avulla. Varmista, että olet ottanut tämän middlewaren käyttöön ohjelman alussa (app.use(json())).
+
+Aluksi tarkistetaan, että syöte on oikeanlainen. Tämän jälkeen luodaan olio newLocation, jossa on palvelimen generoima id ja sijaintitieto. Tämä olio tallennetaan locations-listaan ja palautetaan POST-pyynnön lähettäjälle.
+
+Lisää seuraava route POST-pyynnön käsittelyä varten.
+
 ```javascript
 // POST endpoint to add a new location
 app.post('/api/locations', (req, res) => {
@@ -235,6 +241,9 @@ app.post('/api/locations', (req, res) => {
   });
 });
 ```
+Tähän routeen lisätään myöhemmin vielä datan lähettäminen asiakkaalle.
+
+Testaa seuraavaksi POST-pyynnön käsittely 
 
 ## Frontend (selaimessa ajettavassa React-sovellus)
 
