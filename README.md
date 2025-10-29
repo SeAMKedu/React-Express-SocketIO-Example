@@ -52,7 +52,7 @@ Tuloksena syntyy tiedosto package.json backend-hakemiston juureen.
 
 3. Avaa package.json. Lisää rivi ```"type": "module",``` päätasolle sekä scripts-osion alle kaksi riviä "start" ja "dev" alla olevan mallin mukaan.
    
-```json
+```javascript
 {
   // ...
   "type": "module",
