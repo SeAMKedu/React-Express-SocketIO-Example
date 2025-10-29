@@ -41,6 +41,8 @@ React-Express-SocketIO-Example/
 
 ## Backend (Experss.js-palvelinsovellus)
 
+### Asetukset package.json-tiedostoon
+
 Alusta backend samalla tavalla kuin Full Stack open -kurssin luvun [3a](https://fullstackopen.com/osa3/node_js_ja_express) on neuvottu:
 
 1. Mene hakemistoon React-Express-SocketIO-Example/backend ja avaa command prompt.
@@ -48,9 +50,9 @@ Alusta backend samalla tavalla kuin Full Stack open -kurssin luvun [3a](https://
 
 Tuloksena syntyy tiedosto package.json backend-hakemiston juureen.
 
-3. Avaa package.json ja lisää sinne seuraavat seuraavat kaksi riviä.
-
-```javascript:highlight={4,5}
+3. Avaa package.json ja lisää scripts-osion alle kaksi riviä "start" ja "dev" alla olevan mallin mukaan.
+   
+```
 {
   // ...
   "scripts": {
@@ -60,8 +62,19 @@ Tuloksena syntyy tiedosto package.json backend-hakemiston juureen.
   },
   // ...
 }
-
 ```
+### Pakettien asennus
+
+Asenna tässä sovelluksessa tarvittavat paketit
+```
+npm install express
+npm install cors
+npm install socket.io
+```  
+
+### Sovelluksen runko
+
+
 
 ## Frontend (selaimessa ajettavassa React-sovellus)
 

@@ -1,0 +1,8 @@
+kertaustehtava/
+├── backend/
+│   └── index.js
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+
