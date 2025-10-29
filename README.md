@@ -191,7 +191,7 @@ app.get('/api/locations', (req, res) => {
 });
 
 ```
-Tämä route vastaa GET-pyyntöihin osoitteessa /api/locations. Tätä routea ei tarvita varsinaisessa sovelluksessa, sillä kommunikointi backendin ja frontendin välillä toteutetaan Socket.IO:n avulla. Routea voidaan käyttää kuitenkin sovelluksen testauksessa.
+Tämä route vastaa GET-pyyntöihin osoitteessa /api/locations. Tätä routea ei tarvita lopullisessa sovelluksessa, sillä kommunikointi backendin ja frontendin välillä tehdään Socket.IO:n avulla. Routea voidaan käyttää kuitenkin sovelluksen testauksessa.
 
 Voit ajaa backend-sovelluksen nyt komennolla
 ```
@@ -206,6 +206,35 @@ localhost:3001/api/locations
 Selain näyttää listassa locations olevat pisteet.
 
 <img src="images/apilocations.png" alt="" style="width:40%;" />
+
+### POST-pyynnön käsittely
+
+```javascript
+// POST endpoint to add a new location
+app.post('/api/locations', (req, res) => {
+  const { latitude, longitude } = req.body;
+  if (typeof latitude === 'number' &&
+    typeof longitude === 'number')
+  {
+    const newLocation = {
+      id: locations.length + 1,
+      latitude,
+      longitude
+    };
+    // Add new location to the array
+    locations.push(newLocation);
+
+    return res.status(201).json({
+      success: true,
+      data: newLocation
+    });
+  }
+  res.status(400).json({
+    success: false,
+    message: 'Invalid location data'
+  });
+});
+```
 
 ## Frontend (selaimessa ajettavassa React-sovellus)
 
