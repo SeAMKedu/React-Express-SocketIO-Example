@@ -45,6 +45,8 @@ React-Express-SocketIO-Example/
 
 ## Backend (Experss.js-palvelinsovellus)
 
+Backend vastaanottaa GNSS-vastaanottimelta tai simulaattorilta saatua sijaintitietoa ja tallentaa sen listaan. Backend välittää saamansa sijaintipisteet frontendille Socket.IO:n kautta.
+
 ### Asetukset package.json-tiedostoon
 
 Alusta backend samalla tavalla kuin Full Stack open -kurssin luvun [3a](https://fullstackopen.com/osa3/node_js_ja_express) on neuvottu:
@@ -241,10 +243,76 @@ app.post('/api/locations', (req, res) => {
   });
 });
 ```
-Tähän routeen lisätään myöhemmin vielä datan lähettäminen asiakkaalle.
+Tähän funktioon lisätään myöhemmin vielä datan lähettäminen frontendille Socket.IO:n avulla.
 
-Testaa seuraavaksi POST-pyynnön käsittely 
+Testaa seuraavaksi POST-pyynnön käsittely. Ellei backend ole jo toiminnassa, käynnistä se terminaalista komennolla npm run dev.
 
-## Frontend (selaimessa ajettavassa React-sovellus)
+Kokeile lähettää POST-pyyntöjä VS Code Rest Clientin avulla. Avaa sitten selaimessa sivu localhost:3001/api/locations ja varmista, että POST-pyynnöissä välitetyt sijaintipisteet on tallennettu palvelimelle. Voit tehdä tämän myös tekemällä GET-pyynnön VS Code Rest Clientilla.
+
+Alla olevassa kuvassa on testaukseen tarvittavat pyynnöt:
+
+Kuva XXX
+
+### Socket.IO-yhteyden käsittely
+
+Socket.IO mahdollistaa reaaliaikaisen kahdensuuntaisen viestinnän backendin ja frontendin välillä. Socket.IO mahdollistaa sen, että backend voi lähettää sijaintitietoja frontendille ilman, että frontendin tarvitsee pyytää sitä. Tällä tavoin sijainnin muutos tai reitti näkyy selaimella reaaliaikaisesti.
+
+Sovellus on tarkoitus toteuttaa seuraavasti: Kun frontend ottaa yhteyttä backendiin, avataan näiden välille Socket.IO yhteys. Tällöin frontendille lähetetään kaikki siihen mennessä kertynyt sijaintidata eli listan locations sisältö. Tämän jälkeen backend lähettää sijaintipisteen koordinaatit frontendille aina, kun uusi sijaintitieto saapuu.
+
+Socket.IO:n alustus kuvattiin täää sivulla aiemmin. Lisää ohjelmaan seuraava funktio:
+
+```javascript
+// Socket.IO connection handler
+io.on('connection', socket => {
+  console.log('client connected', socket.id)
+
+  // send location data collected so far
+  // to the newly connected client
+  socket.emit('initialLocations', locations)
+
+  // handle disconnection
+  socket.on('disconnect', () => console.log('disconnected'))
+})
+```
+
+Funktiota io.on kutsutaan, kun uusi asiakas yhdistää Socket.IO:n kautta palvelimeen. Konsoliin tulostetaan ensin asiakkaan socket-id.
+
+Funktio socket.emit lähettää asiakkaalle tunnuksella initialLocations kaiken siihen mennessä kertyneen sijaintidatan (listan locations sisällön). Funktio kuuntelee myös asiakkaan irtautumistapahtumaa (tunnus disconnect).
+
+Lisätään vielä POST-pyynnön käsittelystä vastaavaan funktioon uusimman sijaintitiedon lähettäminen asiakkaalle:
+
+```javascript
+// POST endpoint to add a new location
+app.post('/api/locations', (req, res) => {
+  const { latitude, longitude } = req.body;
+  if (typeof latitude === 'number' &&
+    typeof longitude === 'number')
+  {
+    const newLocation = {
+      id: locations.length + 1,
+      latitude,
+      longitude
+    };
+    // Add new location to the array
+    locations.push(newLocation);
+
+    // send data to the clients
+    io.emit('locationAdded', newLocation) // <--- add this row
+
+    return res.status(201).json({
+      success: true,
+      data: newLocation
+    });
+  }
+  res.status(400).json({
+    success: false,
+    message: 'Invalid location data'
+  });
+});
+```
+
+## Frontend
+
+
 
 ## Simulaattori
