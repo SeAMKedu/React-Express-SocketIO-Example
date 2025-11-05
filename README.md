@@ -297,7 +297,7 @@ app.post('/api/locations', (req, res) => {
     locations.push(newLocation);
 
     // send data to the clients
-    io.emit('locationAdded', newLocation) // <--- add this row
+    io.emit('locationAdded', newLocation) // <--- lisää tämä rivi
 
     return res.status(201).json({
       success: true,
