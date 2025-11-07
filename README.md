@@ -49,7 +49,7 @@ Backend vastaanottaa GNSS-vastaanottimelta tai simulaattorilta saatua sijaintiti
 
 ### Asetukset package.json-tiedostoon
 
-Alusta backend samalla tavalla kuin Full Stack open -kurssin luvun [3a](https://fullstackopen.com/osa3/node_js_ja_express) on neuvottu:
+Alusta backend samalla tavalla kuin Full Stack open -kurssin luvussa [3a](https://fullstackopen.com/osa3/node_js_ja_express) on neuvottu:
 
 1. Mene hakemistoon React-Express-SocketIO-Example/backend ja avaa command prompt.
 2. Anna komento npm init. Voit jättää kaikki kysytyt kohdat tyhjiksi.
@@ -311,8 +311,78 @@ app.post('/api/locations', (req, res) => {
 });
 ```
 
+Backend on nyt valmis ja se pystyy välittämään POST-metodin kautta saadun sijaintitiedon Socket.IO:lla frontendille. Backendin koodi löytyy [täältä](https://github.com/SeAMKedu/React-Express-SocketIO-Example/blob/main/backend/index.js).
+
 ## Frontend
 
+Tehdään React-sovellus, joka näyttää reitin OpenStreetMap-kartalla käyttäen Leaflet-pakettia. Reitin koordinaattipisteet näytetään myös listassa.
+
+### Alustukset
+
+Alusta frontend samalla tavalla kuin Full Stack open -kurssin luvussa [1a](https://fullstackopen.com/osa1/reactin_alkeet) on neuvottu:
+
+Mene hakemistoon React-Express-SocketIO-Example/frontend.
+
+Luo uusi sovellus create-vite-työkalun avulla:
+
+```
+npm create vite@latest
+```
+
+Vastaa kysymyksiin alla olevan esimerkin mukaisesti. Koska olet jo frontend-alihakemistossa, anna kohtaan ```Project name``` piste (.). Tällöin ei tehdä enää uutta alihakemistoa.
+
+```
+> npx
+> create-vite
+o  Project name:
+|  .
+o  Select a framework:
+|  React
+o  Select a variant:
+|  JavaScript
+o  Use rolldown-vite (Experimental)?:
+|  No
+o  Install with npm and start now?
+|  No
+o  Scaffolding project in React-Express-SocketIO-Example/frontend...
+```
+
+Varmista, että olet frontend-hakemistossa. Asenna sitten sovelluksen tarvitsemat kirjastot:
+```
+npm install
+```
+
+Käynnistä React-sovellus:
+```
+npm run dev
+```
+
+Tarkista, että sovellus toimii. Avaa selain ja anna osoite http://localhost:5173/. 
+
+Sovelluksen koodi on hakemistossa src. Yksinkertaistetaan valmiina olevaa koodia samalla tavoin kuin Fullstackopen-materiaalissa. Poista tiedostot App.css ja index.css sekä hakemisto assets.
+
+Muuta tiedoston main.jsx sisältö seuraavaksi:
+```javascript
+import ReactDOM from 'react-dom/client'
+import App from './App'
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+```
+
+Korvaa tiedoston App.jsx koodi seuraavalla koodilla:
+```javascript
+const App = () => (
+  <div>
+    <p>Karttasovellus</p>
+  </div>
+)
+
+export default App
+```
+
+Testaa selaimessa, että sovellus toimii edelleen.
+
+### Socket.IO-kommunikoinnin toteutus
 
 
 ## Simulaattori
