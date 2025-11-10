@@ -1,15 +1,12 @@
 import {
     MapContainer,
     TileLayer,
-    Marker,
-    Popup,
     Polyline
 } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import io from 'socket.io-client'
 
 const ShowLocationsInList = ({locations}) => {
@@ -51,8 +48,6 @@ const ShowMap = ({locations}) => {
 const App = () => {
   const [locations, setLocations] = useState([])
 
-  console.log('App')
-
   useEffect(() => {
     console.log('useEffect')
     // Connect to Socket.IO server
@@ -73,6 +68,8 @@ const App = () => {
     });
      // Cleanup on unmount
     return () => {
+      socket.off('initialLocations');
+      socket.off('locationAdded');
       socket.disconnect();
     }
   } , [])

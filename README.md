@@ -382,7 +382,156 @@ export default App
 
 Testaa selaimessa, että sovellus toimii edelleen.
 
-### Socket.IO-kommunikoinnin toteutus
+### React Leaflet- ja Socket.IO-kirjastojen asennus
 
+Asenna react-leaflet- ja socket.io-client-kirjastot
+
+```
+npm install socket.io-client react-leaflet
+```
+
+### Importit
+
+Avaa tiedosto App.jsx ja lisää tiedoston alkuun Leafletin, React-Leafletin ja Socket.IO:n tarvitsemat importit:
+
+```javascript
+import {
+    MapContainer,
+    TileLayer,
+    Polyline
+} from 'react-leaflet';
+
+import 'leaflet/dist/leaflet.css';
+
+import { useState, useEffect } from 'react';
+import io from 'socket.io-client'
+```
+
+### Socket.IO
+
+Tehdään seuraavaksi Socket.IO:n vaatima toiminnallisuus. Muuta App-komponenttia alla olevan mallin mukaan.
+
+Tilamuuttuja locations sisältää listan sijaintitiedoista. Listan sisältö renderöidään ohjelman lopussa return-lauseessa.
+
+Lisää myös useEffect-funktion runko alla olevan mallin mukaan.
+
+```javascript
+const App = () => {
+  const [locations, setLocations] = useState([])
+
+  useEffect(() => {
+    console.log('useEffect')
+  } , [])
+
+  return (
+    <div>
+      <h1>Leaflet Location Map</h1>
+      {locations.length > 0 && (
+        <ul>
+          {locations.map((location) => (
+            <li key={location.id}>
+              <p>Time: {location.id}, Latitude: {location.latitude},
+                Longitude: {location.longitude}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+```
+
+Socket.IO-yhteyden hallinta sijoitetaan effect-hookiin eli funktioon useEffect. Efekti eli useEffectille parametrina annettu funktio suoritetaan heti komponentin renderöinnin jälkeen. Effect-hookeista on kerrottu lisää [täällä](https://fullstackopen.com/osa2/palvelimella_olevan_datan_hakeminen).
+
+Muuta funktiota useEffect alla olevan mallin mukaiseksi:
+
+```javascript
+  useEffect(() => {
+    console.log('useEffect')
+    // Connect to Socket.IO server
+    const socket = io('http://localhost:3001');
+
+    // Handle initial location data
+    // (data already stored to the server)
+    socket.on('initialLocations', (initialLocations) => {
+      console.log('Received initial locations:',
+        initialLocations);
+      setLocations(initialLocations);
+    });
+     // Handle new location data being added
+      // (received by server from simulator)
+    socket.on('locationAdded', (newLocation) => {
+      console.log('New location added:', newLocation);
+      setLocations(prev => [...prev, newLocation]);
+    });
+     // Cleanup on unmount
+    return () => {
+      socket.off('initialLocations');
+      socket.off('locationAdded');
+      socket.disconnect();
+    }
+  } , [])
+```
+
+Funktio useEffect ajetaan kerran, kun komponentti renderöidään. Aluksi avataan Socket:IO-yhteys palvelimeen. Tämän jälkeen rekisteröidään kuuntelijat socket.on('initialLocations', ...) ja socket.on('locationAdded', ...), jotka reagoivat palvelimen lähettämiin viesteihin ohjelman ajon aikana.
+
+Kuuntelija socket.on('initialLocations', ...) ottaa vastaan palvelimelle frontendin käynnistymiseen mennessä tallennetut sijaintitiedot ja tallentaa nämä locations-listaan. Palvelin lähettää nämä tiedot Socket.IO-yhteyden avaamisen jälkeen.
+
+Kuuntelija socket.on('initialLocations', ...) ottaa vastaan palvelimelta reaaliajassa lähetettyjä sijaintipisteitä. Sijaintipisteet tallennetaan locations-listan loppuun yksi kerrallaan aina niiden saapuessa.
+
+Koska sijaintipisteet tallennetaan listaan tilan päivittävällä funktiolla setLocations, renderöidään komponentti automaattisesti uudelleen. Näin ollen uusi data päivittyy näkymään automaattisesti.
+
+Siirretään vielä locations-listan näyttäminen App-komponentista omaan komponenttiinsa ShowLocationsInList.
+
+```javascript
+const ShowLocationsInList = ({locations}) => {
+
+  return (
+    <div>
+      <h2>Locations</h2>
+      <ul>
+        {locations.map((location) => (
+          <li key={location.id}>
+            <p>Time: {location.id}, Latitude: {location.latitude}, Longitude: {location.longitude}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+```
+
+Tätä komponenttia kutsutaan App-komponentista näin:
+
+```javascript
+const App = () => {
+
+  ...
+
+  return (
+    <div>
+      <h1>Leaflet Location Map</h1>
+      {locations.length > 0 && (
+        <>
+          <ShowLocationsInList locations={locations} />
+        </>
+      )}
+    </div>
+  )
+}
+```
+
+Testaa sovellusta nyt simulaattorin kanssa ja varmista, että Socket.IO-yhteys toimii.
+
+1. Käynnistä backend-sovellus backend-hakemistossa komennolla npm run dev.
+2. Käynnistä simulaattori simulator-hakemistossa komennolla py datagenerator.py
+3. Käynnistä frontend frontend-hakemistossa komennolla npm run dev
+4. Avaa selain osoitteessa localhost:5173.
+
+### Reitin näyttäminen react-leaflet-paketin avulla
+
+Frontendin tarkoitus on näyttää reitin OpenStreetMap-kartalla. Tässä käytetään apuna [react-leaflet-pakettia](https://react-leaflet.js.org/).
+
+React-leaflet mahdollistaa Leaflet-karttojen käytön React-komponenteissa. Sen avulla voidaan näyttää karttoja, pisteitä, reittejä ja muita paikkatietoja React-sovelluksessa. Kartta ja sen elementit (esim. Marker, Polyline) määritellään komponentteina, jolloin ne päivittyvät automaattisesti Reactin tilan mukaan.
 
 ## Simulaattori
