@@ -13,7 +13,7 @@ Sovelluksessa käytetään Socket.IO-pakettia palvelimen ja asiakkaan väliseen 
 
 ## Leaflet React-sovelluksessa
 
-[Leaflet](https://leafletjs.com/) on avoimen lähdekoodin JavaScript-kirjasto, jonka avulla voi rakentaa web-pohjaisia karttasovelluksia. Leafletin avulla voidaan näyttää GeoJSON-muotoista paikkatietoa kartalla. Periaatteessa karttatiedon näyttämiseen riittää kuitenkin vain tieto pisteen pituus- ja laveyspiiristä. Leafletia voidaan käyttää yhdessä esimerkiksi ilmaisen [OpenStreetMap](https://www.openstreetmap.org/)-karttarajapinnan kanssa.
+[Leaflet](https://leafletjs.com/) on avoimen lähdekoodin JavaScript-kirjasto, jonka avulla voi rakentaa web-pohjaisia karttasovelluksia. Leafletin avulla voidaan näyttää GeoJSON-muotoista paikkatietoa kartalla. Periaatteessa karttatiedon näyttämiseen riittää kuitenkin vain tieto pisteen pituus- ja leveyspiiristä. Leafletia voidaan käyttää yhdessä esimerkiksi ilmaisen [OpenStreetMap](https://www.openstreetmap.org/)-karttarajapinnan kanssa.
 
 <img src="images/leafletexample.png" alt="Leaflet" style="width:40%;" />
 
@@ -21,12 +21,12 @@ Tässä harjoituksessa käytetään [React Leaflet](https://react-leaflet.js.org
 
 Leafletin ja OpenStreetMapin sijaan karttasoveluksen voi tehdä esimerkiksi Google Maps Platformin tai MapQuestin palveluja käyttäen. Nämä palvelut vaativat kuitenkin luottokorttitietojen antamisen.
 
-## Socket.io
+## Socket.IO
 
-[Socket.io](https://socket.io/) on reaaliaikaisten web-sovellusten tekemiseen tarkoitettu JavaScript-kirjasto. Socket.io:n avulla tehdään kaksisuuntaisen yhteys web-asiakkaan ja palvelimen välille. Socket.io-yhteys mahdollistaa datan työntämisen palvelimelta asiakkaille, mikä ei onnistu pelkkää HTTP-protokollaa käyttämällä.
+[Socket.IO](https://socket.io/) on reaaliaikaisten web-sovellusten tekemiseen tarkoitettu JavaScript-kirjasto. Socket.IO:n avulla tehdään kaksisuuntaisen yhteys web-asiakkaan ja palvelimen välille. Socket.IO-yhteys mahdollistaa datan työntämisen palvelimelta asiakkaille, mikä ei onnistu pelkkää HTTP-protokollaa käyttämällä.
 
-Socket.io:ssa on oma kirjasto sekä asiakkaalle että palvelimelle. APIt ovat lähes samanlaiset.
-Socket.io käyttää Web Socketteja. Socket.io tuo Web Sockettiin lisää toiminnallisuutta, kuten broadcastingin useille asiakkaille ja asynkronisen I/O:n. Socket.io:n avulla voidaan tehdä web-sovellus, jossa sivu päivittyy automaattisesti aina, kun palvelimelle tulee uutta dataa esimerkiksi HTTP POST -metodin välityksellä.
+Socket.IO:ssa on oma kirjasto sekä asiakkaalle että palvelimelle. APIt ovat lähes samanlaiset.
+Socket.IO käyttää Web Socketteja. Socket.IO tuo Web Sockettiin lisää toiminnallisuutta, kuten broadcastingin useille asiakkaille ja asynkronisen I/O:n. Socket.IO:n avulla voidaan tehdä web-sovellus, jossa sivu päivittyy automaattisesti aina, kun palvelimelle tulee uutta dataa esimerkiksi HTTP POST -metodin välityksellä.
 
 # Esimerkkisovelluksen tekeminen
 
@@ -257,9 +257,9 @@ Kuva XXX
 
 Socket.IO mahdollistaa reaaliaikaisen kahdensuuntaisen viestinnän backendin ja frontendin välillä. Socket.IO mahdollistaa sen, että backend voi lähettää sijaintitietoja frontendille ilman, että frontendin tarvitsee pyytää sitä. Tällä tavoin sijainnin muutos tai reitti näkyy selaimella reaaliaikaisesti.
 
-Sovellus on tarkoitus toteuttaa seuraavasti: Kun frontend ottaa yhteyttä backendiin, avataan näiden välille Socket.IO yhteys. Tällöin frontendille lähetetään kaikki siihen mennessä kertynyt sijaintidata eli listan locations sisältö. Tämän jälkeen backend lähettää sijaintipisteen koordinaatit frontendille aina, kun uusi sijaintitieto saapuu.
+Sovellus on tarkoitus toteuttaa seuraavasti: Kun frontend ottaa yhteyttä backendiin, avataan näiden välille Socket.IO-yhteys. Tällöin frontendille lähetetään kaikki siihen mennessä kertynyt sijaintidata eli listan locations sisältö. Tämän jälkeen backend lähettää sijaintipisteen koordinaatit frontendille aina, kun uusi sijaintitieto saapuu.
 
-Socket.IO:n alustus kuvattiin täää sivulla aiemmin. Lisää ohjelmaan seuraava funktio:
+Socket.IO:n alustus kuvattiin tällä sivulla aiemmin. Lisää ohjelmaan seuraava funktio:
 
 ```javascript
 // Socket.IO connection handler
@@ -479,7 +479,7 @@ Kuuntelija socket.on('initialLocations', ...) ottaa vastaan palvelimelle fronten
 
 Kuuntelija socket.on('initialLocations', ...) ottaa vastaan palvelimelta reaaliajassa lähetettyjä sijaintipisteitä. Sijaintipisteet tallennetaan locations-listan loppuun yksi kerrallaan aina niiden saapuessa.
 
-Koska sijaintipisteet tallennetaan listaan tilan päivittävällä funktiolla setLocations, renderöidään komponentti automaattisesti uudelleen. Näin ollen uusi data päivittyy näkymään automaattisesti.
+Koska sijaintipisteet tallennetaan listaan tilan päivittävällä funktiolla setLocations, renderöidään komponentti automaattisesti uudelleen. Näin ollen uusi data tulee näkymään automaattisesti.
 
 Siirretään vielä locations-listan näyttäminen App-komponentista omaan komponenttiinsa ShowLocationsInList.
 
@@ -533,5 +533,43 @@ Testaa sovellusta nyt simulaattorin kanssa ja varmista, että Socket.IO-yhteys t
 Frontendin tarkoitus on näyttää reitin OpenStreetMap-kartalla. Tässä käytetään apuna [react-leaflet-pakettia](https://react-leaflet.js.org/).
 
 React-leaflet mahdollistaa Leaflet-karttojen käytön React-komponenteissa. Sen avulla voidaan näyttää karttoja, pisteitä, reittejä ja muita paikkatietoja React-sovelluksessa. Kartta ja sen elementit (esim. Marker, Polyline) määritellään komponentteina, jolloin ne päivittyvät automaattisesti Reactin tilan mukaan.
+
+Tehdään seuraavaksi funktio, joka näyttää kuljetun reitin karttapohjalla.
+
+Lisää komponentti ShowMap tiedostoon App.jsx:
+
+```javascript
+const ShowMap = ({locations}) => {
+
+  // Create an array of [latitude, longitude] pairs for the Polyline
+  const positions = locations.map(location => [location.latitude, location.longitude]);
+
+  return (
+    <MapContainer
+      center={positions[0]}
+      zoom={6}
+      style={{height: "400px"}}
+      >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Polyline positions={positions} color="blue" />
+    </MapContainer>
+  )
+}
+```
+
+Ensimmäisellä rivillä
+```javascript
+const positions = locations.map(location => [location.latitude, location.longitude]);
+```
+muutetaan lista sijainneista Leafletin vaatimaan muotoon. Lista locations sisältää alunperin olioita. Kukin listan olio muutetaan listaksi, jossa on alkioina leveys- ja pituusasteet. Lopputuloksena on siis lista listoja.
+
+Komponentti MapContainer on react-leafletin pääkomponentti, joka alustaa ja näyttää kartan React-sovelluksessa. Sille annetaan parametrina 
+
+Komponentti TileLayer...
+
+Komponentti Polyline...
 
 ## Simulaattori
