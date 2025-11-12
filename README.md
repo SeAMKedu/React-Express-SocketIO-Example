@@ -632,7 +632,7 @@ const ShowMap = ({locations}) => {
   return (
     <MapContainer
       center={positions[0]}
-      zoom={6}
+      zoom={12}
       style={{height: "400px"}}
       >
       <TileLayer
@@ -666,3 +666,5 @@ Testaa lopuksi koko sovellus:
 - Mene simulator-hakemistoon ja käynnistä simulaattori komennolla py datagenerator.py
 
 Kohteen eteneminen näkyy nyt karttapohjalla selaimessa.
+
+![Reitti kartalla](images/kuortane.png)

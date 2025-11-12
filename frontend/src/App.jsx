@@ -33,7 +33,7 @@ const ShowMap = ({locations}) => {
   return (
     <MapContainer
       center={positions[0]}
-      zoom={6}
+      zoom={12}
       style={{height: "400px"}}
       >
       <TileLayer
