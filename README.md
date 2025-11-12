@@ -668,3 +668,5 @@ Testaa lopuksi koko sovellus:
 Kohteen eteneminen näkyy nyt karttapohjalla selaimessa.
 
 ![Reitti kartalla](images/kuortane.png)
+
+Tästä repositoriosta löytyy myös valmiit ratkaisut.
