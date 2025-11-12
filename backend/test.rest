@@ -1,0 +1,11 @@
+### Send new location data to the backend API
+POST http://localhost:3001/api/locations
+Content-Type: application/json
+
+{
+    "latitude": 62.80,
+    "longitude": 24.95
+}
+
+### Get all location data from the backend API
+GET http://localhost:3001/api/locations

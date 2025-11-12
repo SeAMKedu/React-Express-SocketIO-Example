@@ -211,7 +211,7 @@ Selain näyttää listassa locations olevat pisteet.
 
 ### POST-pyynnön käsittely
 
-Paikannusta tekevä laitetta simuloiva ohjelma lähettää sijaintitietoa kerran sekunnissa HTTP POST -metodin avulla. Backendissä tarvitaan route, joka käsittelee vastaanotetun datan. Datan jäsentäminen JSON-muodosta olioksi tapahtuu automaattisesti json-middlewaren avulla. Varmista, että olet ottanut tämän middlewaren käyttöön ohjelman alussa (app.use(json())).
+Paikannusta tekevää laitetta simuloiva ohjelma lähettää sijaintitietoa kerran sekunnissa HTTP POST -metodin avulla. Backendissä tarvitaan route, joka käsittelee vastaanotetun datan. Datan jäsentäminen JSON-muodosta olioksi tapahtuu automaattisesti json-middlewaren avulla. Varmista, että olet ottanut tämän middlewaren käyttöön ohjelman alussa (app.use(json())).
 
 Aluksi tarkistetaan, että syöte on oikeanlainen. Tämän jälkeen luodaan olio newLocation, jossa on palvelimen generoima id ja sijaintitieto. Tämä olio tallennetaan locations-listaan ja palautetaan POST-pyynnön lähettäjälle.
 
@@ -332,7 +332,7 @@ Halutessasi voit tehdä myös ohjelman, joka lukee GNSS-vastaanottimelta tietoko
 
 Tässä ohjeessa käytetään valmiiksi kerättyä sijaintidataa, joka on tallennettu tiedostoon positions.json. Tiedosto löytyy [täältä](https://github.com/SeAMKedu/React-Express-SocketIO-Example/blob/main/simulator/positions.json).
 
-Tiedostoon sisältö näyttää tältä:
+Tiedoston positions.json sisältö näyttää tältä:
 ```
 [
   {
@@ -389,6 +389,7 @@ for position in positions:
     print(response)
     time.sleep(2)
 ```
+Simulaattoriohjelma löytyy myös [täältä](https://github.com/SeAMKedu/React-Express-SocketIO-Example/blob/main/simulator/datagenerator.py).
 
 Testataan seuraavaksi simulaattorin toiminta.
 
