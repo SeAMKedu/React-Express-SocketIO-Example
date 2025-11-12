@@ -168,13 +168,13 @@ Tässä sovelluksessa saapuva sijaintidata tallennetaan listaan. Listaan on lait
 const locations = [
   {
     id: 1,
-    latitude: 62.7903,
-    longitude: 22.8406
+    latitude: 62.8060408,
+    longitude: 23.4965408
   },
   {
     id: 2,
-    latitude: 62.7904,
-    longitude: 22.8405
+    latitude: 62.8060435,
+    longitude: 23.4965501
   }
 ];
 ```
@@ -249,9 +249,20 @@ Testaa seuraavaksi POST-pyynnön käsittely. Ellei backend ole jo toiminnassa, k
 
 Kokeile lähettää POST-pyyntöjä VS Code Rest Clientin avulla. Avaa sitten selaimessa sivu localhost:3001/api/locations ja varmista, että POST-pyynnöissä välitetyt sijaintipisteet on tallennettu palvelimelle. Voit tehdä tämän myös tekemällä GET-pyynnön VS Code Rest Clientilla.
 
-Alla olevassa kuvassa on testaukseen tarvittavat pyynnöt:
+Alla on testaukseen tarvittavat VS Code Rest Client -pyynnöt:
+```
+### Send new location data to the backend API
+POST http://localhost:3001/api/locations
+Content-Type: application/json
 
-Kuva XXX
+{
+    "latitude": 62.80,
+    "longitude": 24.95
+}
+
+### Get all location data from the backend API
+GET http://localhost:3001/api/locations
+```
 
 ### Socket.IO-yhteyden käsittely
 
@@ -312,6 +323,80 @@ app.post('/api/locations', (req, res) => {
 ```
 
 Backend on nyt valmis ja se pystyy välittämään POST-metodin kautta saadun sijaintitiedon Socket.IO:lla frontendille. Backendin koodi löytyy [täältä](https://github.com/SeAMKedu/React-Express-SocketIO-Example/blob/main/backend/index.js).
+
+## Simulaattori
+
+Tehdään seuraavaksi simulaattori, joka matkii GNSS-vastaanottimen toimintaa. Simulaattori lukee tiedostosta aiemmin kerättyä sijaintitietoa ja lähettää sen HTTP POST -metodin avulla palvelimelle (backend). 
+
+Halutessasi voit tehdä myös ohjelman, joka lukee GNSS-vastaanottimelta tietokoneen USB-porttiin saapuvaa sijaintitietoa ja lähettää sitä backend-sovelluksessa HTTP POST -viestin välityksellä. Voit kerätä sijaintitietoa myös itse puhelimessa olevalla sovelluksella tallentaa sitä esimerkiksi GPX-muodossa.
+
+Tässä ohjeessa käytetään valmiiksi kerättyä sijaintidataa, joka on tallennettu tiedostoon positions.json. Tiedosto löytyy [täältä](https://github.com/SeAMKedu/React-Express-SocketIO-Example/blob/main/simulator/positions.json).
+
+Tiedostoon sisältö näyttää tältä:
+```
+[
+  {
+    "time": 3,
+    "lat": 62.8060439,
+    "lon": 23.4965541
+  },
+  {
+    "time": 4,
+    "lat": 62.8060444,
+    "lon": 23.4965546
+  },
+  {
+    "time": 5,
+    "lat": 62.8060476,
+    "lon": 23.4965542
+  },
+  ...
+]
+```
+
+Voi olla selkeintä, että avaat oman VS Coden simulaattorin tekemistä ja testaamista varten.
+
+Simulaattori tehdään Python-ohjelmointikielellä. Asenna HTTP-kommunikointia varten requests-paketti:
+```
+pip install requests
+```
+
+Tee simulator-hakemiston alle uusi tiedosto datagenerator.py.
+
+Tee sitten simulaattoriohjelma alla olevan esimerkin mukaisesti:
+```python
+import json
+import requests
+import time
+
+url = "http://localhost:3001/api/locations"
+headers = {"Content-Type": "application/json"}
+
+# Read file positions.json 
+with open("positions.json", "r", encoding="utf-8") as file:
+    positions = json.load(file)
+
+# Loop through positions and send each as a POST request
+for position in positions:
+    location_data = {
+        "id": position["time"],
+        "latitude": position["lat"],
+        "longitude": position["lon"]
+    }
+
+    print(location_data)
+    response = requests.post(url, headers=headers, data=json.dumps(location_data))
+    print(response)
+    time.sleep(2)
+```
+
+Testataan seuraavaksi simulaattorin toiminta.
+
+Mene ensin backend-hakemistoon ja käynnistä backend komennolla npm run dev.
+
+Siirry sitten simulaattorin puolelle ja käynnistä simulaattori komennolla py datagenerator.py.
+
+Varmista, että backend vastaanottaa simulaattorin tuottaman datan. Avaa selain ja osoitteeksi localhost:3001/api/locations. Kun päivität selaimen, backendin vastaanottama sijaintidata pitäisi näkyä ikkunassa.
 
 ## Frontend
 
@@ -566,10 +651,18 @@ const positions = locations.map(location => [location.latitude, location.longitu
 ```
 muutetaan lista sijainneista Leafletin vaatimaan muotoon. Lista locations sisältää alunperin olioita. Kukin listan olio muutetaan listaksi, jossa on alkioina leveys- ja pituusasteet. Lopputuloksena on siis lista listoja.
 
-Komponentti MapContainer on react-leafletin pääkomponentti, joka alustaa ja näyttää kartan React-sovelluksessa. Sille annetaan parametrina 
+Komponentti MapContainer on react-leafletin pääkomponentti, joka alustaa ja näyttää kartan React-sovelluksessa. Sille annetaan parametrina kartan keskipiste (center), zoomaustaso ja korkeus. Korkeus on pakko antaa, sillä muuten kartta ei tule näkyviin. 
 
-Komponentti TileLayer...
+Komponenttia TileLayer käytetään tässä sovelluksessa kartan näyttämiseen. Attribuuteissa määritellään, että käytetään OpenStreetMap-palvelun karttaa.
 
-Komponentti Polyline...
+Reitti piirretään karttaan Polyline-komponentin avulla. Polylinelle annetaan parametrina lista sijainneista.
 
-## Simulaattori
+## Sovelluksen kokeilu
+
+Testaa lopuksi koko sovellus:
+- Mene backend-hakemistoon ja käynnistä palvelin komennolla npm run dev
+- Mene frontend-hakemistoon ja käynnistä selainsovellus komennolla npm run dev
+- Käynnistä selain ja anna osoite localhost:5173
+- Mene simulator-hakemistoon ja käynnistä simulaattori komennolla py datagenerator.py
+
+Kohteen eteneminen näkyy nyt karttapohjalla selaimessa.

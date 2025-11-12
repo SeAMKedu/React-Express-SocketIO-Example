@@ -29,13 +29,13 @@ app.use(json());
 const locations = [
   {
     id: 1,
-    latitude: 62.7903,
-    longitude: 22.8406
+    latitude: 62.8060408,
+    longitude: 23.4965408
   },
   {
     id: 2,
-    latitude: 62.7904,
-    longitude: 22.8405
+    latitude: 62.8060435,
+    longitude: 23.4965501
   }
 ];
 
