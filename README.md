@@ -1,5 +1,7 @@
 # Sijaintidatan näyttäminen kartalla — (Express, React, Leaflet ja Socket.IO)
 
+
+
 Tässä dokumentissa kerrotaan, miten tehdään yksinkertainen web-sovellus, joka näyttää sijaintitetoa kartalla.
 
 Sovellus tehdään Helsingin yliopiston [Full Stack open](https://fullstackopen.com/) -kurssin luvuissa 1—3 opetettujen periaatteiden mukaan.
