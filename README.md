@@ -1,5 +1,4 @@
 # Sijaintidatan näyttäminen kartalla — (Express, React, Leaflet ja Socket.IO)
-[![DOI](https://zenodo.org/badge/1064627066.svg)](https://doi.org/10.5281/zenodo.17597022)
 
 Tässä dokumentissa kerrotaan, miten tehdään yksinkertainen web-sovellus, joka näyttää sijaintitetoa kartalla.
 
